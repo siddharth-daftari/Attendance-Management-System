@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "176097620914",
+    "project_id": "firebase-cmpe273"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176097620914:android:1a4d58b03d1c0d6e",
+        "android_client_info": {
+          "package_name": "com.akshaysonvane.cmpe273"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176097620914-9bj3pnifr30opsa44big1d9s0msq0nk7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akshaysonvane.cmpe273",
+            "certificate_hash": "4E7471A8DAB919E0AC8F3D516E9F6FA79400C963"
+          }
+        },
+        {
+          "client_id": "176097620914-egvh5h9a76h7r5b3j1gp3er7o5s4mrqp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMi3AKPAyoLXw__4ee5oM7xdl-kwV-DV0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
