@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +25,7 @@ public class LoginIntermediateActivity extends AppCompatActivity
     String firstName;
     String lastName;
     String studentId;
-    String emailid;
+    String emailId;
     String mac;
 
     SharedPreferences.Editor editor;
@@ -45,9 +44,13 @@ public class LoginIntermediateActivity extends AppCompatActivity
         btnRegister = (Button) findViewById(R.id.btnRegister);
 
         final Intent intent = getIntent();
-        etFirstName.setText(intent.getStringExtra("firstName"));
-        etLastName.setText(intent.getStringExtra("lastName"));
-        etEmailId.setText(intent.getStringExtra("email"));
+        firstName = intent.getStringExtra("firstName");
+        lastName = intent.getStringExtra("lastName");
+        emailId = intent.getStringExtra("email");
+
+        etFirstName.setText(firstName);
+        etLastName.setText(lastName);
+        etEmailId.setText(emailId);
 
         btnRegister.setOnClickListener(new View.OnClickListener()
         {
@@ -81,7 +84,7 @@ public class LoginIntermediateActivity extends AppCompatActivity
         editor.putBoolean("userLogged", true);
         editor.putString("firstName", firstName);
         editor.putString("lastName", lastName);
-        editor.putString("emailid", emailId);
+        editor.putString("emailId", emailId);
         editor.putString("studentId", studentId);
         editor.putString("mac", mac);
         editor.commit();

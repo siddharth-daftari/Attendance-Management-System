@@ -5,13 +5,15 @@ import com.akshaysonvane.cmpe273.api.ConnectionApi;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.akshaysonvane.cmpe273.utils.Utils.BASE_URL;
+
 /**
  * Created by Akshay on 11/20/2016.
  */
 
 public class RestAdapterClass
 {
-    public static String BASE_URL = "http://yusupport.6te.net/webservices";
+
 
     public ConnectionApi getApiClassObject()
     {

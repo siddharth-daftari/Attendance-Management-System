@@ -21,19 +21,26 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import butterknife.ButterKnife;
+import butterknife.Bind;
+
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
+
+    @Bind(R.id.sign_in_button)
+    SignInButton signInButton;
+
     GoogleApiClient mGoogleApiClient;
-    private SignInButton signInButton;
     private static final int RC_SIGN_IN = 9001;
 
     SharedPreferences cmpe273prefs;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
         checkUserLog();
 
@@ -93,11 +100,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Toast.makeText(this, acct.getDisplayName() + " " + acct.getEmail() + " " + acct.getPhotoUrl(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, LoginIntermediateActivity.class);
+            Intent intent = new Intent(this, SignupActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra("firstName", acct.getGivenName());
             intent.putExtra("lastName", acct.getFamilyName());
             intent.putExtra("email", acct.getEmail());
+            intent.putExtra("displayPicUrl", acct.getPhotoUrl().toString());
             startActivity(intent);
             //updateUI(true);
         }

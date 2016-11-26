@@ -7,6 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -42,6 +47,47 @@ public class FirstFragment extends Fragment
         {
 
         }
+
+        Toast.makeText(getActivity(), getMacAddr(), Toast.LENGTH_LONG).show();
+    }
+
+    public String getMacAddr()
+    {
+        try
+        {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all)
+            {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null)
+                {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes)
+                {
+                    String str = Integer.toHexString(b & 0xFF);
+                    if(str.length() == 1)
+                    {
+                        str = "0" + str;
+                    }
+                    res1.append(str + ":");
+                }
+
+                if (res1.length() > 0)
+                {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+        return "02:00:00:00:00:00";
     }
 
     @Override
