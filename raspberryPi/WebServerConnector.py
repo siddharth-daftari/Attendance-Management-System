@@ -12,22 +12,24 @@ class WebServerConnector(object):
         self._setupLogging()
 
     def _setupLogging(self):
-        self.logger = logging.getLogger('WebServerConnector')
+
+        logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
+        self.logger = logging.getLogger('WebSr')
         self.logger.setLevel(logging.DEBUG)
 
         fh = logging.FileHandler(self.logFile)
         fh.setLevel(logging.DEBUG)
 
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.INFO)
+        # ch = logging.StreamHandler()
+        # ch.setLevel(logging.INFO)
 
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s'
-                                      ' - %(message)s')
+        formatter = logging.Formatter('%(asctime)s - %(name)5s - '
+                                      '%(levelname)7s - %(message)s')
         fh.setFormatter(formatter)
-        ch.setFormatter(formatter)
+        # ch.setFormatter(formatter)
 
         self.logger.addHandler(fh)
-        self.logger.addHandler(ch)
+        # self.logger.addHandler(ch)
 
     def getClassesInfo(self):
         """
@@ -36,8 +38,12 @@ class WebServerConnector(object):
         TODO: test
         """
         self.logger.info("Getting classes info")
-        response = requests.get(self.classInfoURL)
-        self.logger.debug("Response: '%s'" % response.json())
+        try:
+            response = requests.get(self.classInfoURL)
+            self.logger.debug("Response: '%s'" % response.json())
+        except:
+            raise Exception("Failed to get classes info")
+
         return response.json()
 
     def markAttendance(self, stMac, rpMac, className):
@@ -52,14 +58,17 @@ class WebServerConnector(object):
         payload['raspPieMacAddress'] = rpMac
         payload['classId'] = className
         payload_json = json.dumps(payload)
-        self.logger.error(payload_json)
-        self.logger.info("Marking attendace for '%s'" % stMac)
+        self.logger.debug("Payload: %s" % payload_json)
+        self.logger.info("Marking attendace for '%s' in '%s'" % (stMac,
+                                                                 className))
         try:
             r = requests.post(self.attendanceMakerURL, payload_json)
             self.logger.info("Response status code: %s" % r.status_code)
             assert r.status_code == 200
+        except AssertionError:
+            self.logger.error("Failed to mark attendace")
         except:
-            logging.exception("Failed to mark attendace")
+            self.logger.exception("Failed to mark attendace")
         return r.status_code
 
 
@@ -67,7 +76,7 @@ if __name__ == "__main__":
     print "Testing..."
     w = WebServerConnector("http://f1aba23f.ngrok.io",
                            "http://f1aba23f.ngrok.io/markattendance/")
-    # print "Got class info:\n", w.getClassesInfo()
-    # print "#" * 40
-    w.markAttendance("00:0a:95:9d:68:98", "00:0a:95:9d:68:96", "CMPE273")
+    print "Got class info:\n", w.getClassesInfo()
+    print "#" * 60
+    w.markAttendance("00:0a:95:91:68:e4", "00:0a:95:9d:68:96", "CMPE273")
     print "Done testing!"
