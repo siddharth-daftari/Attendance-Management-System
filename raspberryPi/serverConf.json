@@ -1,0 +1,10 @@
+{
+    "port": 0,
+    "uuid": "94f39d29-7d6d-437d-973b-fba39e49d4ee",
+    "backlog": 1,
+    "rpMac": "B8:27:EB:9B:90:FD",
+
+    "classInfoURL": "http://f1aba23f.ngrok.io/",
+    "attendanceMakerURL": "http://f1aba23f.ngrok.io/markattendance/"
+
+}
