@@ -1,5 +1,10 @@
 from models import *
-from datetime import datetime
+from datetime import datetime,tzinfo
+
+import pytz
+#mytz = pytz.timezone('US/Pacific')
+#currDate = pytz.utc.localize(datetime.utcnow(), is_dst=None).astimezone(mytz)
+
 
 def registerStudentService(jsonVar):
     """service to register a student"""
@@ -15,9 +20,14 @@ def registerStudentService(jsonVar):
             studentDetailsVar = StudentDetails(firstName=firstNameVar,
                                                lastName=lastNameVar,
                                                studentId=studentIdVar,
-                                               macAddress=macAddressVar,
-                                               classId=classIdVar)
-            studentDetailsVar.save()
+                                               macAddress=macAddressVar)
+
+            if StudentClassMapping.objects.filter(studentId=studentIdVar, classId=classIdVar).count() == 0:
+                studentClassMapping = StudentClassMapping(studentId=studentIdVar, classId=classIdVar)
+
+                studentDetailsVar.save()
+                studentClassMapping.save()
+
 
             returnVar['data'] = ""
             returnVar['message'] = "Student Registered"
@@ -31,7 +41,7 @@ def registerStudentService(jsonVar):
         returnVar['message'] = ex.message
         returnVar['result'] = False
 
-        print returnVar
+        print ex
         return returnVar
 
 
@@ -67,5 +77,51 @@ def markAttendanceService(jsonVar):
         returnVar['message'] = ex.message
         returnVar['result'] = False
 
-        print returnVar
+        print ex
+        return returnVar
+
+def getClassDetailsService():
+    """service to get all class details"""
+    try:
+
+        returnVar = {}
+
+
+        classDetails = ClassDetails.objects.filter(classDay=datetime.now().weekday(), classStartTime__gt=datetime.now().time())
+
+        if len(classDetails) != 0:
+            nextClass = classDetails[0]
+            studentIds = list()
+            macAddresses = list()
+
+            studentIdsQuerySet = StudentClassMapping.objects.filter(classId=nextClass.classId).only('studentId')
+            for e in studentIdsQuerySet:
+                studentIds.append(e.studentId)
+
+            macAddressesQuerySet = StudentDetails.objects.filter(studentId__in=studentIds).only('macAddress')
+            for e in macAddressesQuerySet:
+                macAddresses.append(e.macAddress)
+
+            classInfo = {}
+            classInfo['startTime'] = datetime.now().date().__format__("%m-%d-%y") + " " + nextClass.classStartTime.__format__("%H:%M:%S")
+            classInfo['endTime'] = datetime.now().date().__format__("%m-%d-%y") + " " + nextClass.classEndTime.__format__("%H:%M:%S")
+            classInfo['enrolledStudents'] = macAddresses
+
+            returnDataVar = {}
+            returnDataVar[nextClass.classId] = classInfo
+
+        else:
+            raise Exception("No classes now.")
+
+        returnVar['data'] = returnDataVar
+        returnVar['message'] = "Requested class info available in data field"
+        returnVar['result'] = True
+
+        return returnVar
+    except Exception as ex:
+        returnVar['data'] = ""
+        returnVar['message'] = ex.message
+        returnVar['result'] = False
+
+        print ex
         return returnVar

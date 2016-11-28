@@ -2,7 +2,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 from datetime import datetime
-
+#import pytz
+#mytz = pytz.timezone('US/Pacific')
+#currDate = pytz.utc.localize(datetime.utcnow(), is_dst=None).astimezone(mytz)
 # Create your models here.
 
 class StudentDetails(models.Model):
@@ -29,8 +31,9 @@ class ProfessorDetails(models.Model):
 class ClassDetails(models.Model):
     classId = models.CharField(max_length=200, primary_key=True, null=False)
     className = models.CharField(max_length=200, null=False)
-    classStartTime = models.DateTimeField(null=False)
-    classEndTime = models.DateTimeField(null=False)
+    classDay = models.IntegerField(null=False)
+    classStartTime = models.TimeField(null=False)
+    classEndTime = models.TimeField(null=False)
 
 class ClassProfessorMapping(models.Model):
     id = models.AutoField(primary_key=True, null=False)

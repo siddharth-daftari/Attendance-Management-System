@@ -23,3 +23,11 @@ def markAttendance(request):
         return HttpResponse(json.dumps(returnVar), status=403, content_type='application/json')
     else:
         return HttpResponse(json.dumps(returnVar), status=200, content_type='application/json')
+
+
+def getClassDetails(request):
+    returnVar = getClassDetailsService()
+    if not returnVar['result']:
+        return HttpResponse(json.dumps(returnVar), status=403, content_type='application/json')
+    else:
+        return HttpResponse(json.dumps(returnVar), status=200, content_type='application/json')
