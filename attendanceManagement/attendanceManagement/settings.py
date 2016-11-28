@@ -25,7 +25,10 @@ SECRET_KEY = '-qef77b=_$j0^&t&*udto5f^9$80!6koq-0%f(e8yrigvvpkuq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'f1aba23f.ngrok.io',
+    '127.0.0.1'
+]
 
 
 # Application definition
@@ -44,7 +47,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -129,4 +132,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [ BASE_DIR + "/static/",]
+STATICFILES_DIRS = [ BASE_DIR + "/static/"]

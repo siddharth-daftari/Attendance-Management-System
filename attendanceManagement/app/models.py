@@ -6,29 +6,38 @@ from datetime import datetime
 # Create your models here.
 
 class StudentDetails(models.Model):
-    firstName = models.CharField(max_length=200)
-    lastName = models.CharField(max_length=200)
-    studentId = models.IntegerField(primary_key=True)
-    macAddress = models.CharField(max_length=200)
+    studentId = models.IntegerField(primary_key=True, null=False)
+    firstName = models.CharField(max_length=200, null=False)
+    lastName = models.CharField(max_length=200, null=False)
+    macAddress = models.CharField(max_length=20, unique=True, null=False)
 
 class AttendanceDetails(models.Model):
     attandance_id = models.AutoField(primary_key=True)
-    date = models.DateTimeField(default=datetime.now)
-    studentMacAddress = models.CharField(max_length=200)
-    raspPieMacAddress = models.CharField(max_length=200)
-    attendanceStatus = models.CharField(max_length=200)
-    classId = models.IntegerField()
+    date = models.DateTimeField(default=datetime.now, null=False)
+    studentMacAddress = models.CharField(max_length=20, null=False)
+    raspPieMacAddress = models.CharField(max_length=20, null=False)
+    attendanceStatus = models.CharField(max_length=200, null=False)
+    classId = models.CharField(max_length=200, null=False)
 
 class ProfessorDetails(models.Model):
-    firstName = models.CharField(max_length=200)
-    lastName = models.CharField(max_length=200)
-    professorId = models.IntegerField(primary_key=True)
+    professorId = models.IntegerField(primary_key=True, null=False)
+    firstName = models.CharField(max_length=200, null=False)
+    lastName = models.CharField(max_length=200, null=False)
+    password = models.CharField(max_length=200, null=False)
+
 
 class ClassDetails(models.Model):
-    className = models.CharField(max_length=200)
-    classId = models.IntegerField(primary_key=True)
+    classId = models.CharField(max_length=200, primary_key=True, null=False)
+    className = models.CharField(max_length=200, null=False)
+    classStartTime = models.DateTimeField(null=False)
+    classEndTime = models.DateTimeField(null=False)
 
 class ClassProfessorMapping(models.Model):
-    id = models.AutoField(primary_key=True)
-    classId = models.IntegerField()
-    professorId = models.IntegerField()
+    id = models.AutoField(primary_key=True, null=False)
+    classId = models.CharField(max_length=200, null=False)
+    professorId = models.IntegerField(null=False)
+
+class StudentClassMapping(models.Model):
+    id = models.AutoField(primary_key=True, null=False)
+    studentId = models.IntegerField(null=False)
+    classId = models.CharField(max_length=200, null=False)

@@ -18,6 +18,8 @@ from django.contrib import admin
 from attendanceManagement import views as attendance_view
 
 urlpatterns = [
-    url(r'^$', attendance_view.index),
+    url(r'^register/', attendance_view.register),
+    url(r'^markattendance/', attendance_view.markAttendance),
+    url(r'^index/', attendance_view.index),
     url(r'^admin/', admin.site.urls),
 ]
