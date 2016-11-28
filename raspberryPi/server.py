@@ -68,7 +68,10 @@ class BTServer(object):
                 data = clientsocket.recv(1024)
                 self.logger.info("Student Name: %s", data)
                 clientsocket.close()
-                callback(address[0])
+                if address[0] in self.studentMacAddrList:
+                    callback(address[0])
+                else:
+                    logging.warn("Unauthorized MAC addr '%s'" % address[0])
             except bluetooth.btcommon.BluetoothError as e:
                 self.logger.error("Bluetooth Error: '%s'" % e.message)
             self.logger.info("-" * 40)
@@ -103,6 +106,10 @@ if __name__ == "__main__":
                                       config["attendanceMakerURL"])
     while True:
         # classesInfo = webServerCon.getClassesInfo()
+        # if not classesInfo['result']:
+        #     logging.info("No class today... Sleeping for an hour")
+        #     time.sleep(60 * 60)
+        #     continue
         # TODO remove the below lines used for demo
         x = datetime.datetime.now()
         x += datetime.timedelta(seconds=11)
@@ -110,20 +117,25 @@ if __name__ == "__main__":
         y = datetime.datetime.now()
         y += datetime.timedelta(hours=2)
         y = y.strftime("%m-%d-%y %H:%M:%S")
-        classesInfo = {"CMPE272": {"startTime": x,
-                                   "endTime": y},
-                       "CMPE273": {"startTime": "12-27-16 05:31:05",
-                                   "endTime": "12-27-16 22:31:05"}}
+        classesInfo = {"message": "Requested class info available in data "
+                                  "field",
+                       "data": {"CMPE283": {"endTime": y,
+                                            "enrolledStudents":
+                                            ["00:0a:95:9d:68:00",
+                                             "00:0a:95:9d:68:01",
+                                             "64:BC:0C:F7:84:55"],
+                                            "startTime": x}},
+                       "result": True}
 
         # Get next class assuming non overlapping class timing
         now = datetime.datetime.now()
         nextClass, nextClassStartTime, nextClassEndTime = None, None, None
-        for className in classesInfo:
+        for className in classesInfo["data"]:
             classEndTime = datetime.datetime.strptime(
-                classesInfo[className]['endTime'],
+                classesInfo["data"][className]['endTime'],
                 "%m-%d-%y %H:%M:%S")
             classStartTime = datetime.datetime.strptime(
-                classesInfo[className]['startTime'],
+                classesInfo["data"][className]['startTime'],
                 "%m-%d-%y %H:%M:%S")
             if classEndTime > now:
                 if nextClass is None or nextClassEndTime > classEndTime:
@@ -143,6 +155,8 @@ if __name__ == "__main__":
             time.sleep(int(timeDeltaSecs))
 
         server = BTServer(config["port"], config["uuid"], config["backlog"])
+        server.studentMacAddrList = classesInfo["data"][className][
+            "enrolledStudents"]
         server.serve(nextClassEndTime,
                      lambda stMac: webServerCon.markAttendance(stMac,
                                                                config["rpMac"],

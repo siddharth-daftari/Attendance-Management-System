@@ -12,7 +12,6 @@ class WebServerConnector(object):
         self._setupLogging()
 
     def _setupLogging(self):
-
         logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
         self.logger = logging.getLogger('WebSr')
         self.logger.setLevel(logging.DEBUG)
@@ -42,7 +41,7 @@ class WebServerConnector(object):
             response = requests.get(self.classInfoURL)
             self.logger.debug("Response: '%s'" % response.json())
         except:
-            raise Exception("Failed to get classes info")
+            logging.exception("Failed to get classes info")
 
         return response.json()
 
