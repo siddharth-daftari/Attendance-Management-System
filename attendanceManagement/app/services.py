@@ -6,6 +6,38 @@ import pytz
 #currDate = pytz.utc.localize(datetime.utcnow(), is_dst=None).astimezone(mytz)
 
 
+def checkIfAttendanceMarkedService(jsonVar):
+    """service to check if student has marked attendance or not"""
+    try:
+        studentMacAddressVar = jsonVar['macAddress']
+        classIdVar = jsonVar['classId']
+        attendanceStatusVar = 'Marked'
+        returnVar = {}
+
+        if AttendanceDetails.objects.filter(date__contains=datetime.now().date(),
+                                         attendanceStatus=attendanceStatusVar,
+                                         studentMacAddress=studentMacAddressVar,
+                                         classId=classIdVar).count() == 0:
+
+            returnVar['data'] = False
+            returnVar['message'] = "Attendance not marked yet"
+            returnVar['result'] = True
+
+        else:
+            returnVar['data'] = True
+            returnVar['message'] = "Attendance already marked"
+            returnVar['result'] = True
+
+        return returnVar
+    except Exception as ex:
+        returnVar['data'] = ""
+        returnVar['message'] = ex.message
+        returnVar['result'] = False
+
+        print ex
+        return returnVar
+
+
 def registerStudentService(jsonVar):
     """service to register a student"""
     try:

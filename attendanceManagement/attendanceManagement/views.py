@@ -6,6 +6,13 @@ import json
 def index(request):
     return render(request, 'index.html')
 
+def checkIfAttendanceMarked(request):
+    jsonVar = json.loads(request.body)
+    returnVar = checkIfAttendanceMarkedService(jsonVar)
+    if not returnVar['result']:
+        return HttpResponse(json.dumps(returnVar), status=500, content_type='application/json')
+    else:
+        return HttpResponse(json.dumps(returnVar), status=200, content_type='application/json')
 
 def register(request):
     jsonVar = json.loads(request.body)

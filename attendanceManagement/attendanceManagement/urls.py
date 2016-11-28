@@ -20,6 +20,7 @@ from attendanceManagement import views as attendance_view
 urlpatterns = [
     url(r'^register/', attendance_view.register),
     url(r'^markattendance/', attendance_view.markAttendance),
+    url(r'^checkIfAttendanceMarked/', attendance_view.checkIfAttendanceMarked),
     url(r'^classDetails/', attendance_view.getClassDetails),
     url(r'^index/', attendance_view.index),
     url(r'^admin/', admin.site.urls),
