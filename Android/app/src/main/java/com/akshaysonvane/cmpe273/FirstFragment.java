@@ -9,9 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.akshaysonvane.cmpe273.adapters.RestAdapterClass;
+import com.akshaysonvane.cmpe273.api.ConnectionApi;
+import com.akshaysonvane.cmpe273.model.ResponseModel;
+
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -48,46 +56,30 @@ public class FirstFragment extends Fragment
 
         }
 
-        Toast.makeText(getActivity(), getMacAddr(), Toast.LENGTH_LONG).show();
+        checkAttendace();
     }
 
-    public String getMacAddr()
+    public void checkAttendace()
     {
-        try
+        ConnectionApi connectionApi = new RestAdapterClass().getApiClassObject();
+
+        connectionApi.checkAttendance(new Callback<ResponseModel>()
         {
-            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface nif : all)
+            @Override
+            public void success(ResponseModel responseModel, Response response)
             {
-                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
-
-                byte[] macBytes = nif.getHardwareAddress();
-                if (macBytes == null)
+                if (responseModel != null)
                 {
-                    return "";
+                    Toast.makeText(getActivity(), responseModel.getMessage(), Toast.LENGTH_LONG).show();
                 }
-
-                StringBuilder res1 = new StringBuilder();
-                for (byte b : macBytes)
-                {
-                    String str = Integer.toHexString(b & 0xFF);
-                    if(str.length() == 1)
-                    {
-                        str = "0" + str;
-                    }
-                    res1.append(str + ":");
-                }
-
-                if (res1.length() > 0)
-                {
-                    res1.deleteCharAt(res1.length() - 1);
-                }
-                return res1.toString();
             }
-        }
-        catch (Exception ex)
-        {
-        }
-        return "02:00:00:00:00:00";
+
+            @Override
+            public void failure(RetrofitError error)
+            {
+                error.printStackTrace();
+            }
+        });
     }
 
     @Override

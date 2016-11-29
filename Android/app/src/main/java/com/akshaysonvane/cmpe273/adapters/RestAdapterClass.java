@@ -1,9 +1,12 @@
 package com.akshaysonvane.cmpe273.adapters;
 
 import com.akshaysonvane.cmpe273.api.ConnectionApi;
+import com.squareup.okhttp.OkHttpClient;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.concurrent.TimeUnit;
+
+import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 
 import static com.akshaysonvane.cmpe273.utils.Utils.BASE_URL;
 
@@ -14,15 +17,19 @@ import static com.akshaysonvane.cmpe273.utils.Utils.BASE_URL;
 public class RestAdapterClass
 {
 
-
     public ConnectionApi getApiClassObject()
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+        final OkHttpClient client = new OkHttpClient();
+        client.setReadTimeout(60, TimeUnit.SECONDS);
+        client.setConnectTimeout(60, TimeUnit.SECONDS);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(BASE_URL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient(client))
                 .build();
 
-        return retrofit.create(ConnectionApi.class);
+        return restAdapter.create(ConnectionApi.class);
     }
 
 
