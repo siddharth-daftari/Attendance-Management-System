@@ -1,31 +1,30 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-		<meta charset="utf-8" />
+<!-- saved from url=(0030)http://127.0.0.1:8000/app/form -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		
 		<title>Synergy Application</title>
 
-		<meta name="description" content="" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 		<!-- bootstrap & fontawesome -->
-		<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
-		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
+		<link rel="stylesheet" href="./Synergy Application_files/bootstrap.min.css">
+		<link rel="stylesheet" href="./Synergy Application_files/font-awesome.min.css">
 
 		<!-- page specific plugin styles -->
 
 		<!-- text fonts -->
-		<link rel="stylesheet" href="{% static 'css/fonts.googleapis.com.css' %}" />
+		<link rel="stylesheet" href="./Synergy Application_files/fonts.googleapis.com.css">
 
 		<!-- ace styles -->
-		<link rel="stylesheet" href="{% static 'css/ace.min.css' %}" class="ace-main-stylesheet" id="main-ace-style" />
+		<link rel="stylesheet" href="./Synergy Application_files/ace.min.css" class="ace-main-stylesheet" id="main-ace-style">
 
 		<!--[if lte IE 9]>
 			<link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
 		<![endif]-->
-		<link rel="stylesheet" href="{% static 'css/ace-skins.min.css' %}" />
-		<link rel="stylesheet" href="{% static 'css/ace-rtl.min.css' %}" />
+		<link rel="stylesheet" href="./Synergy Application_files/ace-skins.min.css">
+		<link rel="stylesheet" href="./Synergy Application_files/ace-rtl.min.css">
 
 		<!--[if lte IE 9]>
 		  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
@@ -34,7 +33,7 @@
 		<!-- inline styles related to this page -->
 
 		<!-- ace settings handler -->
-		<script src="{% static 'js/ace-extra.min.js' %}"></script>
+		<script src="./Synergy Application_files/ace-extra.min.js"></script><style>@keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-moz-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-webkit-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-ms-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-o-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}.ace-save-state{animation-duration:10ms;-o-animation-duration:10ms;-ms-animation-duration:10ms;-moz-animation-duration:10ms;-webkit-animation-duration:10ms;animation-delay:0s;-o-animation-delay:0s;-ms-animation-delay:0s;-moz-animation-delay:0s;-webkit-animation-delay:0s;animation-name:nodeInserted;-o-animation-name:nodeInserted;-ms-animation-name:nodeInserted;-moz-animation-name:nodeInserted;-webkit-animation-name:nodeInserted}</style>
 
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
@@ -44,14 +43,16 @@
 		<![endif]-->
 	</head>
 
-		<body class="no-skin">
+	<body class="no-skin">
 		<div id="navbar" class="navbar navbar-default          ace-save-state">
 			<div class="navbar-container ace-save-state" id="navbar-container">
 				
-
+          <div class="navbar-header pull-left">
+	 <img src="./Synergy Application_files/sjsuHat3.png" height="50" width="50">
+            </div>
 				<div class="navbar-header pull-left">
-				 <img src="{% static 'sjsuHat3.png' %}" height="50" width="50" />
-						<a href="dashboards" class="navbar-brand">
+		
+						<a href="http://127.0.0.1:8000/app/dashboards" class="navbar-brand">
 							
 						<small>
 			Attendance Management System
@@ -60,25 +61,28 @@
 				
 				</div>
 
-							<div class="navbar-buttons navbar-header pull-right" role="navigation">
+				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 					<ul class="nav ace-nav">
 					
 
 						<li class="light-blue dropdown-modal">
-							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								<img class="nav-user-photo" src="{% static 'images/avatars/avatar4.png' %}" alt="Jason's Photo" />
+							<a data-toggle="dropdown" href="http://127.0.0.1:8000/app/form#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="./Synergy Application_files/avatar4.png" alt="Jason&#39;s Photo">
 								<span class="user-info">
 									<small>Welcome,</small>
-									John
+										 
+											 Sithu 
+												
+											
 								</span>
-                         <img src="{% static 'dropdown.png' %}" height="20" width="20" />
+                         <img src="./Synergy Application_files/dropdown4.png" height="20" width="20">
 						
 							</a>
 
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								<li>
-									<a href="login">
-										<img src="{% static 'lock1.png' %}" height="20" width="20" />
+									<a href="http://127.0.0.1:8000/app/login">
+										<img src="./Synergy Application_files/lock1.png" height="20" width="20">
 										Logout
 									</a>
 								</li>
@@ -94,7 +98,7 @@
 				try{ace.settings.loadState('main-container')}catch(e){}
 			</script>
 
-			<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+			<div id="sidebar" class="sidebar                  responsive                    ace-save-state" data-sidebar="true" data-sidebar-scroll="true" data-sidebar-hover="true">
 				<script type="text/javascript">
 					try{ace.settings.loadState('sidebar')}catch(e){}
 				</script>
@@ -111,9 +115,8 @@
 
 				<ul class="nav nav-list">
 					<li class="">
-						
-						<a href="dashboards">
-							
+						<a href="http://127.0.0.1:8000/app/dashboards">
+							<img src="./Synergy Application_files/home.png" height="20" width="20">
 							<span class="menu-text"> Dashboard </span>
 						</a>
 
@@ -121,36 +124,21 @@
 						
 					</li>
 
-				
-
-
 					<li class="">
-						<a href="form">
-							<i class="menu-icon fa fa-list-alt"></i>
+						<a href="http://127.0.0.1:8000/app/form">
+							<img src="./Synergy Application_files/calendar.png" height="17" width="17">
 							<span class="menu-text">Attendance by Date </span>
 						</a>
 
 						<b class="arrow"></b>
 					</li>
 
-					<li class="">
-						<a href="calendar.html">
-							<i class="menu-icon fa fa-calendar"></i>
-
-							<span class="menu-text">
-								Calendar
-								</span>
-							</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
+					
 
 				</ul><!-- /.nav-list -->
 
-				
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-				<img src="{% static 'leftarrow.png' %}" height="17" width="17" />	
+				<img src="./Synergy Application_files/leftarrow2.png" height="20" width="20">	
 				</div>
 			</div>
             
@@ -163,12 +151,11 @@
 	
 
 						<div class="page-header">
+							
 							<h1>
-								Dashboard
-								<small>
-									<i class="ace-icon fa fa-angle-double-right"></i>
-									See Attendance By Date
-								</small>
+								<img src="./Synergy Application_files/arrow.png" height="20" width="20">
+								Attendance By Date
+								
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -179,12 +166,19 @@
 								
 									</div><!-- /.span -->
 								</div><!-- /.row -->
-
-								<div class="hr hr-18 dotted hr-double"></div>
-
-								<h4 class="pink">
-									<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+								<h4 class="blue">
 									
+									<form method="POST" action="http://127.0.0.1:8000/app/search">
+                                      <input type="hidden" name="csrfmiddlewaretoken" value="YRr8kmf19vfbEVfpa3BWwHKibwfs4y37JP8n5KXFarNdNZT2i1cQRziTtgYhU6fY">
+
+                                      <p>Select Date: <input type="date" id="datepicker" name="datepicker" required="true">
+	
+									 
+									   <button class="btn btn-sm btn-danger" type="submit">Submit</button>
+									   </p>
+                        
+										
+                                    </form>
 								</h4>
 
 								<div class="hr hr-18 dotted hr-double"></div>
@@ -197,7 +191,10 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
+											 
 											Results for 273 class
+												
+											
 										</div>
 
 										<!-- div.table-responsive -->
@@ -211,32 +208,14 @@
 														<th>Firstname</th>
 														<th>LastName</th>
 														<th class="hidden-480">Student ID</th>
-													
-
+														
 														<th class="hidden-480">Attendance Status</th>
 														
 													</tr>
 												</thead>
 
 												<tbody>
-													 {% for st in detail %}
-			                                    
-													<tr>
-														<td>
-															{{ st.student.firstName }}
-  
-														</td>
-														<td>{{ st.student.lastName }}</td>
-														<td class="hidden-480">{{ st.student.studentId }}</td>
-																									
-														<td class="hidden-480">
-													
-															<span class="label label-sm label-success">{{st.status}}
-															
-														</td>
-													</tr>
-												
-   														{% endfor %}
+													 
 											
 													
 												</tbody>
@@ -253,15 +232,15 @@
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 						
-				</div>
-			</div><!-- /.main-content -->
+				
+			<!-- /.main-content -->
 
 			<div class="footer">
 				<div class="footer-inner">
 					<div class="footer-content">
 						<span class="bigger-120">
 							<span class="blue bolder">Team Synergy Application</span>
-							 &copy; 2016-2017
+							 © 2016-2017
 						</span>
 
 						&nbsp; &nbsp;
@@ -270,15 +249,15 @@
 				</div>
 			</div>
 
-			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<a href="http://127.0.0.1:8000/app/form#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 			</a>
-		</div><!-- /.main-container -->
+		<!-- /.main-container -->
 
 		<!-- basic scripts -->
 
 		<!--[if !IE]> -->
-		<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+		<script src="./Synergy Application_files/jquery-2.1.4.min.js"></script>
 
 		<!-- <![endif]-->
 
@@ -286,16 +265,17 @@
 <script src="assets/js/jquery-1.11.3.min.js"></script>
 <![endif]-->
 		<script type="text/javascript">
-			if('ontouchstart' in document.documentElement) document.write("<script src='{% static 'js/jquery.mobile.custom.min.js' %}'>"+"<"+"/script>");
+			if('ontouchstart' in document.documentElement) document.write("<script src='/static/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 		</script>
-		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+		<script src="./Synergy Application_files/bootstrap.min.js"></script>
 
 		<!-- page specific plugin scripts -->
 
 		<!-- ace scripts -->
-		<script src="{% static 'js/ace-elements.min.js' %}"></script>
-		<script src="{% static 'js/ace.min.js' %}"></script>
+		<script src="./Synergy Application_files/ace-elements.min.js"></script>
+		<script src="./Synergy Application_files/ace.min.js"></script>
 
 		<!-- inline scripts related to this page -->
-	</body>
-</html>
+	
+
+</body></html>

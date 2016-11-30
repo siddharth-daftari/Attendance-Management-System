@@ -47,10 +47,12 @@
 	<body class="no-skin">
 		<div id="navbar" class="navbar navbar-default          ace-save-state">
 			<div class="navbar-container ace-save-state" id="navbar-container">
-				
+				 <div class="navbar-header pull-left">
+	      <img src="{% static 'sjsuHat3.png' %}" height="50" width="50" />
+            </div>
 
 				<div class="navbar-header pull-left">
-			 <img src="{% static 'sjsuHat3.png' %}" height="50" width="50" />
+		
 						<a href="dashboards" class="navbar-brand">
 							
 						<small>
@@ -69,9 +71,11 @@
 								<img class="nav-user-photo" src="{% static 'images/avatars/avatar4.png' %}" alt="Jason's Photo" />
 								<span class="user-info">
 									<small>Welcome,</small>
-									John
+										 {% for l in proffesorName %}
+											 {{ l }} 
+												{% endfor %}
 								</span>
-                         <img src="{% static 'dropdown.png' %}" height="20" width="20" />
+                         <img src="{% static 'dropdown4.png' %}" height="20" width="20" />
 						
 							</a>
 
@@ -134,7 +138,7 @@
 				</ul><!-- /.nav-list -->
 
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-				<img src="{% static 'leftarrow.png' %}" height="17" width="17" />	
+				<img src="{% static 'leftarrow2.png' %}" height="20" width="20" />	
 				</div>
 			</div>
             
@@ -163,7 +167,15 @@
 									</div><!-- /.span -->
 								</div><!-- /.row -->
 
-					
+					          <h5 class="brown">
+									<p>Welcome to your dashboard.</p>
+								    <p>	You are currently viewing the attendance status of your class.</p>
+									<p>View attendance of a particular day by selecting attendance by Date</p>
+									
+								</h5>
+
+								<div class="hr hr-18 dotted hr-double"></div>
+
 
 								
 

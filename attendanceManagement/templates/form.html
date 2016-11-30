@@ -35,7 +35,6 @@
 
 		<!-- ace settings handler -->
 		<script src="{% static 'js/ace-extra.min.js' %}"></script>
-       
 
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
@@ -45,13 +44,15 @@
 		<![endif]-->
 	</head>
 
-		<body class="no-skin">
+	<body class="no-skin">
 		<div id="navbar" class="navbar navbar-default          ace-save-state">
 			<div class="navbar-container ace-save-state" id="navbar-container">
 				
-
+          <div class="navbar-header pull-left">
+	 <img src="{% static 'sjsuHat3.png' %}" height="50" width="50" />
+            </div>
 				<div class="navbar-header pull-left">
-				 <img src="{% static 'sjsuHat3.png' %}" height="50" width="50" />
+		
 						<a href="dashboards" class="navbar-brand">
 							
 						<small>
@@ -60,7 +61,8 @@
 					</a>
 				
 				</div>
-	<div class="navbar-buttons navbar-header pull-right" role="navigation">
+
+				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 					<ul class="nav ace-nav">
 					
 
@@ -69,9 +71,12 @@
 								<img class="nav-user-photo" src="{% static 'images/avatars/avatar4.png' %}" alt="Jason's Photo" />
 								<span class="user-info">
 									<small>Welcome,</small>
-									John
+										 {% for l in proffesorName %}
+											 {{ l }} 
+												{% endfor %}
+											
 								</span>
-                         <img src="{% static 'dropdown.png' %}" height="20" width="20" />
+                         <img src="{% static 'dropdown4.png' %}" height="20" width="20" />
 						
 							</a>
 
@@ -100,7 +105,6 @@
 				</script>
 
 				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-					
 					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
 						
 					</div>
@@ -134,9 +138,8 @@
 
 				</ul><!-- /.nav-list -->
 
-				
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-				<img src="{% static 'leftarrow.png' %}" height="17" width="17" />	
+				<img src="{% static 'leftarrow2.png' %}" height="20" width="20" />	
 				</div>
 			</div>
             
@@ -152,10 +155,8 @@
 							
 							<h1>
 								<img src="{% static 'arrow.png' %}" height="20" width="20" />
-							
-									
-									 Attendance By Date
-							
+								Attendance By Date
+								
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -166,15 +167,14 @@
 								
 									</div><!-- /.span -->
 								</div><!-- /.row -->
-
-								
-
 								<h4 class="blue">
 									
 									<form method="POST" action="/app/search">
                                       {% csrf_token %}
 
-                                      <p>Select Date: <input type="date" id="datepicker" name="datepicker" required="true">
+                                      <p>Select Date: 
+										
+											  <input type="date" id="datepicker" name="datepicker" required="true">
 	
 									 
 									   <button class="btn btn-sm btn-danger" type="submit" >Submit</button>
@@ -194,7 +194,10 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											Results for 273 class
+											 {% for l in classId %}
+											Results for {{ l }} class
+												{% endfor %}
+											
 										</div>
 
 										<!-- div.table-responsive -->
@@ -208,8 +211,7 @@
 														<th>Firstname</th>
 														<th>LastName</th>
 														<th class="hidden-480">Student ID</th>
-													
-
+														
 														<th class="hidden-480">Attendance Status</th>
 														
 													</tr>
@@ -225,7 +227,7 @@
 														</td>
 														<td>{{ st.student.lastName }}</td>
 														<td class="hidden-480">{{ st.student.studentId }}</td>
-																									
+																								
 														<td class="hidden-480">
 													
 															<span class="label label-sm label-success">{{st.status}}
@@ -282,7 +284,17 @@
 		<!--[if IE]>
 <script src="assets/js/jquery-1.11.3.min.js"></script>
 <![endif]-->
-	
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='{% static 'js/jquery.mobile.custom.min.js' %}'>"+"<"+"/script>");
+		</script>
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<!-- ace scripts -->
+		<script src="{% static 'js/ace-elements.min.js' %}"></script>
+		<script src="{% static 'js/ace.min.js' %}"></script>
+
 		<!-- inline scripts related to this page -->
 	</body>
 </html>

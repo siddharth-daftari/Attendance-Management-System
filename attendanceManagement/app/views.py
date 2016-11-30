@@ -18,12 +18,17 @@ def dashboard(request):
         resultList.append(rs)
     ls=[]
     ls.append("273")
-    detail={"detail":resultList,"classId":ls}
+    proffName=["Sithu"]
+    
+    detail={"detail":resultList,"classId":ls,"proffesorName":proffName}
 
     return render(request,'dashboard1.html',detail)
 
 def form(request):
-    return render(request, 'form.html')
+    ls=["273"]
+    proffName=["Sithu"]
+    detail={"classId":ls,"proffesorName":proffName}
+    return render(request, 'form.html',detail)
 
 def loginform(request):
      if request.method == 'POST':
@@ -50,7 +55,9 @@ def search(request):
             resultList.append(rs)
         ls=[]
         ls.append("273")
-        detail={"detail":resultList,"classId":ls}
+        proffName=["Sithu"]
+    
+        detail={"detail":resultList,"classId":ls,"proffesorName":proffName}
         return render(request,'form.html',detail)    
             
     else:
