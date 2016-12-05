@@ -14,10 +14,9 @@
 }
 .form .thumbnail {
   background: #FFFFFF;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto 30px;
-  padding: 50px 30px;
+  width: 200;
+  height: 200;
+  
   border-top-left-radius: 100%;
   border-top-right-radius: 100%;
   border-bottom-left-radius: 100%;

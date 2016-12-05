@@ -16,12 +16,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.akshaysonvane.cmpe273.adapters.RestAdapterClass;
+import com.akshaysonvane.cmpe273.api.ConnectionApi;
+import com.akshaysonvane.cmpe273.model.ResponseModel;
+import com.akshaysonvane.cmpe273.model.StudentModel;
+
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class SignupActivity extends AppCompatActivity
 {
@@ -37,11 +45,17 @@ public class SignupActivity extends AppCompatActivity
     EditText _studentId;
     @Bind(R.id.btn_signup)
     Button _signupButton;
+    @Bind(R.id.input_class)
+    EditText _input_class;
 
     SharedPreferences.Editor editor;
     SharedPreferences cmpe273prefs;
 
     String displayPicUrl = null;
+
+    StudentModel studentModel;
+
+    boolean registered = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -90,16 +104,24 @@ public class SignupActivity extends AppCompatActivity
         String lastName = _lNameText.getText().toString();
         String emailId = _emailText.getText().toString();
         String studentId = _studentId.getText().toString();
-        String mac = getMacAddr();
+        String inputClass = _input_class.getText().toString();
+        //String mac = getMacAddr();
+        String mac = "c0:ee:fb:30:09:77";
 
-        Toast.makeText(this, mac, Toast.LENGTH_LONG);
+        studentModel = new StudentModel();
+        studentModel.setFirstName(firstName);
+        studentModel.setLastName(lastName);
+        studentModel.setStudentId(studentId);
+        studentModel.setClassId(inputClass);
+        studentModel.setMacAddress(mac);
 
 
         if (checkNetworkConnectivity())
         {
-            if (registerStudent())
+            registerStudent(studentModel);
+            if (registered)
             {
-                storeLoginData(firstName.trim(), lastName.trim(), emailId.trim(), studentId.trim(), mac);
+                storeLoginData(firstName.trim(), lastName.trim(), emailId.trim(), studentId.trim(), inputClass, mac);
 
                 onSignupSuccess();
                 progressDialog.dismiss();
@@ -110,22 +132,10 @@ public class SignupActivity extends AppCompatActivity
             }
             else
             {
-                Toast.makeText(getApplicationContext(), "Connection Error. Try again Later.", Toast.LENGTH_SHORT).show();
+                onSignupFailed();
+                progressDialog.dismiss();
             }
         }
-
-//        new android.os.Handler().postDelayed(
-//                new Runnable()
-//                {
-//                    public void run()
-//                    {
-//                        // On complete call either onSignupSuccess or onSignupFailed
-//                        // depending on success
-//                        onSignupSuccess();
-//                        // onSignupFailed();
-//                        progressDialog.dismiss();
-//                    }
-//                }, 3000);
     }
 
 
@@ -138,7 +148,7 @@ public class SignupActivity extends AppCompatActivity
 
     public void onSignupFailed()
     {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getBaseContext(), "Registration failed", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }
@@ -196,7 +206,7 @@ public class SignupActivity extends AppCompatActivity
         return valid;
     }
 
-    private void storeLoginData(String firstName, String lastName, String emailId, String studentId, String mac)
+    private void storeLoginData(String firstName, String lastName, String emailId, String studentId, String inputClass, String mac)
     {
         cmpe273prefs = getSharedPreferences("cmpe273", Context.MODE_PRIVATE);
 
@@ -206,14 +216,46 @@ public class SignupActivity extends AppCompatActivity
         editor.putString("lastName", lastName);
         editor.putString("emailId", emailId);
         editor.putString("studentId", studentId);
+        editor.putString("inputClass", inputClass);
         editor.putString("mac", mac);
         editor.putString("displayPicUrl", displayPicUrl);
         editor.commit();
     }
 
-    private boolean registerStudent()
+    private void registerStudent(StudentModel studentModel)
     {
-        return true;
+        ConnectionApi connectionApi = new RestAdapterClass().getApiClassObject();
+
+        connectionApi.registerStudent(studentModel, new Callback<ResponseModel>()
+        {
+            @Override
+            public void success(ResponseModel responseModel, Response response)
+            {
+                if (responseModel != null)
+                {
+                    if (responseModel.getResult().equalsIgnoreCase("true"))
+                    {
+                        registered = true;
+                    }
+                    else
+                    {
+                        registered = false;
+                    }
+
+                    Toast.makeText(getApplicationContext(), responseModel.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Connection Error. Try again Later.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error)
+            {
+                error.printStackTrace();
+            }
+        });
     }
 
     private boolean checkNetworkConnectivity()

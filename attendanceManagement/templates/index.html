@@ -11,7 +11,7 @@
 <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Montserrat:400,700'>
 <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'>
 
-      <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
   
 </head>
@@ -21,24 +21,18 @@
 <div class="container">
   <div class="info">
     <img src="{% static 'GetHeaderLogo.png' %}" width="300" height="70" align="center" />
-    <h1>Attendance Management System</h1><span> </span>
+    <span> <h1>Attendance Management System</h1></span>
   </div>
 </div>
 <div class="form">
   <div class="thumbnail">
-  <img src="{% static 'sjsuHat1.png' %}" /></div>
-  <form class="register-form">
-    <input type="text" placeholder="name"/>
-    <input type="password" placeholder="password"/>
-    <input type="text" placeholder="email address"/>
-    <button>create</button>
-    <p class="message">Already registered? <a href="#">Sign In</a></p>
-  </form>
-  <form class="login-form">
-    <input type="text" placeholder="username"/>
-    <input type="password" placeholder="password"/>
+  <img src="{% static 'sjsuHat3.png' %}" height="200" width="200" /></div>
+  <form class="login-form" method="POST" action="/app/loginform">
+      {% csrf_token %}
+    <input type="text" placeholder="userId" required="true" name="userid"/>
+    <input type="password" placeholder="password" required="true" name="passwd"/>
     <button>login</button>
-    <p class="message">Not registered? <a href="#">Create an account</a></p>
+    
   </form>
 </div>
 
