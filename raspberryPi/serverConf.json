@@ -4,7 +4,7 @@
     "backlog": 1,
     "rpMac": "B8:27:EB:9B:90:FD",
 
-    "classInfoURL": "http://f1aba23f.ngrok.io/",
-    "attendanceMakerURL": "http://f1aba23f.ngrok.io/markattendance/"
+    "classInfoURL": "http://24a7d3dd.ngrok.io/classDetails/",
+    "attendanceMakerURL": "http://24a7d3dd.ngrok.io/markattendance/"
 
 }
