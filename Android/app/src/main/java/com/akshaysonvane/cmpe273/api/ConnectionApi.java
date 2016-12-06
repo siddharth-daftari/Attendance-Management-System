@@ -1,5 +1,6 @@
 package com.akshaysonvane.cmpe273.api;
 
+import com.akshaysonvane.cmpe273.model.AttendanceModel;
 import com.akshaysonvane.cmpe273.model.ResponseModel;
 import com.akshaysonvane.cmpe273.model.StudentModel;
 
@@ -15,8 +16,8 @@ import retrofit.http.POST;
 
 public interface ConnectionApi
 {
-    @GET("/checkIfAttendanceMarked/")
-    void checkAttendance(Callback<ResponseModel> callback);
+    @POST("/checkIfAttendanceMarked/")
+    void checkAttendance(@Body AttendanceModel attendanceModel, Callback<ResponseModel> callback);
 
 
     @POST("/register/")

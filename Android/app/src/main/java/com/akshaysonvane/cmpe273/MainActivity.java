@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences cmpe273prefs;
 
+    View view;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -182,6 +184,7 @@ public class MainActivity extends AppCompatActivity
 
     public void connectToPi(View view)
     {
+        this.view = view;
         if (isBluetoothEnabled())
         {
             new ConnectPi().execute(view);
@@ -190,7 +193,9 @@ public class MainActivity extends AppCompatActivity
         {
             if (!mBluetoothAdapter.isEnabled())
             {
+                Toast.makeText(getApplicationContext(), R.string.enable_bluetooth, Toast.LENGTH_SHORT).show();
                 mBluetoothAdapter.enable();
+                new ConnectPi().execute(view);
             }
         }
 
@@ -213,7 +218,6 @@ public class MainActivity extends AppCompatActivity
     {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return mBluetoothAdapter.isEnabled();
-
     }
 
     @Override
@@ -300,6 +304,7 @@ public class MainActivity extends AppCompatActivity
         {
             try
             {
+                //Snackbar.make(view, "Connection failed.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 bluetoothSocket.close();
             }
             catch (Exception e)

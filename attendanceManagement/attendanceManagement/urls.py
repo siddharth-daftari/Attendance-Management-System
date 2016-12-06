@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^index/', attendance_view.index),
     url(r'^admin/', admin.site.urls),
     url(r'^app/', include('app.urls')),
+    url(r'^leaderElection/', include('leaderElection.urls')),
 ]
