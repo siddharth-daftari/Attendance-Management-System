@@ -14,8 +14,8 @@ def getLeader(request):
     if leaderMac and _timeoutReached():
         _resetLeader()
     body = {}
-    body['data'] = ""
-    body['message'] = leaderMac
+    body['data'] = leaderMac
+    body['message'] = ""
     body['result'] = True if leaderMac else False
     return HttpResponse(json.dumps(body), content_type='application/json')
 
