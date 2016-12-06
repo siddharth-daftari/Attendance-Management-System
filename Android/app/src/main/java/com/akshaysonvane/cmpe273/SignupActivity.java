@@ -57,6 +57,15 @@ public class SignupActivity extends AppCompatActivity
 
     boolean registered = false;
 
+    ProgressDialog progressDialog;
+
+    String firstName;
+    String lastName;
+    String emailId;
+    String studentId;
+    String inputClass;
+    String mac;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -94,19 +103,18 @@ public class SignupActivity extends AppCompatActivity
 
         _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(SignupActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Registering...");
         progressDialog.show();
 
-        String firstName = _fNameText.getText().toString();
-        String lastName = _lNameText.getText().toString();
-        String emailId = _emailText.getText().toString();
-        String studentId = _studentId.getText().toString();
-        String inputClass = _input_class.getText().toString();
-        //String mac = getMacAddr();
-        String mac = "c0:ee:fb:30:09:77";
+        firstName = _fNameText.getText().toString();
+        lastName = _lNameText.getText().toString();
+        emailId = _emailText.getText().toString();
+        studentId = _studentId.getText().toString();
+        inputClass = _input_class.getText().toString();
+        mac = getMacAddr();
+        //mac = "c0:ee:fb:30:09:77";
 
         studentModel = new StudentModel();
         studentModel.setFirstName(firstName);
@@ -119,22 +127,7 @@ public class SignupActivity extends AppCompatActivity
         if (checkNetworkConnectivity())
         {
             registerStudent(studentModel);
-            if (registered)
-            {
-                storeLoginData(firstName.trim(), lastName.trim(), emailId.trim(), studentId.trim(), inputClass, mac);
 
-                onSignupSuccess();
-                progressDialog.dismiss();
-
-                Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent1);
-            }
-            else
-            {
-                onSignupFailed();
-                progressDialog.dismiss();
-            }
         }
     }
 
@@ -148,7 +141,7 @@ public class SignupActivity extends AppCompatActivity
 
     public void onSignupFailed()
     {
-        //Toast.makeText(getBaseContext(), "Registration failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "Registration failed", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }
@@ -243,6 +236,10 @@ public class SignupActivity extends AppCompatActivity
                     }
 
                     Toast.makeText(getApplicationContext(), responseModel.getMessage(), Toast.LENGTH_LONG).show();
+
+                    isSuccessfull();
+
+
                 }
                 else
                 {
@@ -256,6 +253,26 @@ public class SignupActivity extends AppCompatActivity
                 error.printStackTrace();
             }
         });
+    }
+
+    public void isSuccessfull()
+    {
+        if (registered)
+        {
+            storeLoginData(firstName.trim(), lastName.trim(), emailId.trim(), studentId.trim(), inputClass, mac);
+
+            onSignupSuccess();
+            progressDialog.dismiss();
+
+            Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+            intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent1);
+        }
+        else
+        {
+            onSignupFailed();
+            progressDialog.dismiss();
+        }
     }
 
     private boolean checkNetworkConnectivity()
