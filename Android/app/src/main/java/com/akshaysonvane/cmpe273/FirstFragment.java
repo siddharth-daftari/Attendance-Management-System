@@ -1,37 +1,41 @@
 package com.akshaysonvane.cmpe273;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akshaysonvane.cmpe273.adapters.RestAdapterClass;
 import com.akshaysonvane.cmpe273.api.ConnectionApi;
+import com.akshaysonvane.cmpe273.model.AttendanceModel;
 import com.akshaysonvane.cmpe273.model.ResponseModel;
+import com.squareup.picasso.Picasso;
 
-import java.net.NetworkInterface;
-import java.util.Collections;
-import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FirstFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FirstFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FirstFragment extends Fragment
 {
+    @Bind(R.id.txtStatus)
+    TextView txtStatus;
+
+    @Bind(R.id.imgStatus)
+    ImageView imgStatus;
+
+    SharedPreferences cmpe273prefs;
+
     private OnFragmentInteractionListener mListener;
 
     public FirstFragment()
@@ -56,14 +60,13 @@ public class FirstFragment extends Fragment
 
         }
 
-        checkAttendace();
     }
 
-    public void checkAttendace()
+    public void checkAttendace(AttendanceModel attendanceModel)
     {
         ConnectionApi connectionApi = new RestAdapterClass().getApiClassObject();
 
-        connectionApi.checkAttendance(new Callback<ResponseModel>()
+        connectionApi.checkAttendance(attendanceModel, new Callback<ResponseModel>()
         {
             @Override
             public void success(ResponseModel responseModel, Response response)
@@ -71,6 +74,12 @@ public class FirstFragment extends Fragment
                 if (responseModel != null)
                 {
                     Toast.makeText(getActivity(), responseModel.getMessage(), Toast.LENGTH_LONG).show();
+
+                    if (responseModel.getData().equalsIgnoreCase("true"))
+                    {
+                        Picasso.with(getActivity()).load(R.drawable.tick).into(imgStatus);
+                        txtStatus.setText(responseModel.getMessage());
+                    }
                 }
             }
 
@@ -86,11 +95,22 @@ public class FirstFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false);
+        View view = inflater.inflate(R.layout.fragment_first, container, false);
+
+        ButterKnife.bind(this, view);
+
+        Picasso.with(getActivity()).load(R.drawable.cross).into(imgStatus);
+        txtStatus.setText("Attendance not marked yet.");
+
+        cmpe273prefs = getActivity().getSharedPreferences("cmpe273", Context.MODE_PRIVATE);
+        AttendanceModel attendanceModel = new AttendanceModel();
+        attendanceModel.setMacAddress(cmpe273prefs.getString("mac", "c0:ee:fb:30:09:e8"));
+        attendanceModel.setClassId(cmpe273prefs.getString("inputClass", "CMPE273"));
+
+        checkAttendace(attendanceModel);
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri)
     {
         if (mListener != null)
