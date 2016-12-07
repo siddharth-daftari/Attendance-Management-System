@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            Toast.makeText(this, acct.getDisplayName() + " " + acct.getEmail() + " " + acct.getPhotoUrl(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, acct.getDisplayName() + " " + acct.getEmail() + " " + acct.getPhotoUrl(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SignupActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra("firstName", acct.getGivenName());
@@ -107,14 +107,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             intent.putExtra("email", acct.getEmail());
             intent.putExtra("displayPicUrl", acct.getPhotoUrl().toString());
             startActivity(intent);
-            //updateUI(true);
         }
         else
         {
 
             Toast.makeText(this, "unauthenticated" + result.getStatus(), Toast.LENGTH_SHORT).show();
             // Signed out, show unauthenticated UI.
-            //updateUI(false);
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,9 @@ public class FirstFragment extends Fragment
 
     @Bind(R.id.imgStatus)
     ImageView imgStatus;
+
+    @Bind(R.id.swipeToRefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     SharedPreferences cmpe273prefs;
 
@@ -73,8 +77,6 @@ public class FirstFragment extends Fragment
             {
                 if (responseModel != null)
                 {
-                    Toast.makeText(getActivity(), responseModel.getMessage(), Toast.LENGTH_LONG).show();
-
                     if (responseModel.getData().equalsIgnoreCase("true"))
                     {
                         Picasso.with(getActivity()).load(R.drawable.tick).into(imgStatus);
@@ -89,6 +91,8 @@ public class FirstFragment extends Fragment
                 error.printStackTrace();
             }
         });
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -99,16 +103,32 @@ public class FirstFragment extends Fragment
 
         ButterKnife.bind(this, view);
 
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                setAttendanceModel();
+            }
+        });
+
         Picasso.with(getActivity()).load(R.drawable.cross).into(imgStatus);
         txtStatus.setText("Attendance not marked yet.");
 
+        setAttendanceModel();
+
+        return view;
+    }
+
+    public void setAttendanceModel()
+    {
         cmpe273prefs = getActivity().getSharedPreferences("cmpe273", Context.MODE_PRIVATE);
         AttendanceModel attendanceModel = new AttendanceModel();
         attendanceModel.setMacAddress(cmpe273prefs.getString("mac", "c0:ee:fb:30:09:e8"));
         attendanceModel.setClassId(cmpe273prefs.getString("inputClass", "CMPE273"));
 
         checkAttendace(attendanceModel);
-        return view;
     }
 
     public void onButtonPressed(Uri uri)

@@ -20,24 +20,24 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:theme="@style/AppTheme.Dark">
+
+        </activity>
+        <activity
+            android:name=".SignupActivity"
+            android:theme="@style/AppTheme.Dark">
+        </activity>
+        <activity
+            android:name=".SplashActivity"
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity android:name=".LoginIntermediateActivity">
-
-        </activity>
-        <activity
-            android:name=".SignupActivity"
-            android:theme="@style/AppTheme.Dark">
-
         </activity>
     </application>
 

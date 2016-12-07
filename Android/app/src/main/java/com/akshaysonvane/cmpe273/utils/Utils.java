@@ -7,11 +7,11 @@ package com.akshaysonvane.cmpe273.utils;
 public class Utils
 {
     private static Utils utils = null;
-    public static String BASE_URL = "http://14276dae.ngrok.io";
+    public String BASE_URL = "http://a6adaa70.ngrok.io";
     public static String PI_MAC = "B8:27:EB:9B:90:FD";
     public static String ServerUUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee";
 
-    public Utils getInstance()
+    public static Utils getInstance()
     {
         if(utils == null)
         {

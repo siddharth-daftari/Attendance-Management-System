@@ -16,6 +16,9 @@ import retrofit.http.POST;
 
 public interface ConnectionApi
 {
+    @GET("/leaderElection/getLeader/")
+    void getLeader(Callback<ResponseModel> callback);
+
     @POST("/checkIfAttendanceMarked/")
     void checkAttendance(@Body AttendanceModel attendanceModel, Callback<ResponseModel> callback);
 
