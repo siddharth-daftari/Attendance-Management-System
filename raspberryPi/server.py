@@ -98,22 +98,28 @@ class BTServer(object):
                 self.logger.info("Sleeping for %s sec" % self.sleepSecs)
                 time.sleep(self.sleepSecs)
                 continue
+            flag = False
             try:
                 clientsocket, address = self.socket.accept()
                 self.logger.info("-" * 40)
                 self.logger.info("Incoming MAC addr: %s" % address[0])
+                flag = True
                 data = clientsocket.recv(1024)
                 self.logger.info("Student Name: %s", data)
                 clientsocket.close()
-                if address[0] in self.studentMacAddrList:
-                    callback(address[0])
-                else:
-                    logging.warn("Unauthorized MAC addr '%s'" % address[0])
             except bluetooth.btcommon.BluetoothError as e:
                 if e.message == "timed out":
                     # logging.debug("Bluetooth timed out [expected]")
                     continue
-                self.logger.error("Bluetooth Error: '%s'" % e.message)
+                if not flag:
+                    self.logger.error("Bluetooth Error: '%s'" % e.message)
+                    continue
+                if address[0].lower() in self.studentMacAddrList:
+                    callback(address[0])
+            else:
+                self.logger.warn("Unauthorized MAC addr '%s'" % address[0])
+                self.logger.debug("List of authorised MAC addr: %s"
+                                  % self.studentMacAddrList)
             self.logger.info("-" * 40)
 
 
@@ -192,14 +198,14 @@ if __name__ == "__main__":
     webServerCon = WebServerConnector(config["classInfoURL"],
                                       config["attendanceMakerURL"])
     while True:
-        # classesInfo = webServerCon.getClassesInfo()
-        # logging.debug(classesInfo)
-        # if not classesInfo['result']:
-        #     logging.info("No class today... Sleeping for an hour")
-        #     time.sleep(60 * 60)
-        #     continue
+        classesInfo = webServerCon.getClassesInfo()
+        logging.debug(classesInfo)
+        if not classesInfo['result']:
+            logging.info("No class today... Sleeping for an hour")
+            time.sleep(60 * 60)
+            continue
         # TODO remove the below lines used for demo
-        classesInfo = getDummyDataForPresentation()
+        # classesInfo = getDummyDataForPresentation()
 
         nextClass, nextClassStartTime, nextClassEndTime = \
             getNextClassTime(classesInfo)
@@ -221,6 +227,8 @@ if __name__ == "__main__":
         server = BTServer(config["port"], config["uuid"], config["backlog"])
         server.studentMacAddrList = classesInfo["data"][nextClass][
             "enrolledStudents"]
+        server.studentMacAddrList = [x.lower() for x in
+                                     server.studentMacAddrList]
         server.serve(nextClassEndTime,
                      lambda stMac: webServerCon.markAttendance(stMac,
                                                                config["rpMac"],
