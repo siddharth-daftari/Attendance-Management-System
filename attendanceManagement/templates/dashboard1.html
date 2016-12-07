@@ -132,6 +132,14 @@
 
 						<b class="arrow"></b>
 					</li>
+					 <li class="">
+						<a href="mail">
+							<img src="{% static 'mail.png' %}" height="17" width="17" />
+							<span class="menu-text">Send a Reminder</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
 
 					
 
@@ -169,18 +177,42 @@
 
 					          <h5 class="brown">
 									<p>Welcome to your dashboard.</p>
-								    <p>	You are currently viewing the attendance status of your class.</p>
+								    <p>	You are currently viewing the attendance status of your class for today.</p>
 									<p>View attendance of a particular day by selecting attendance by Date</p>
 									
 								</h5>
 
+
+								
+
 								<div class="hr hr-18 dotted hr-double"></div>
-
-
+								<h5 class="brown">
 								
+							        {% for s in total_student_list %}
+										<p>The Class Strength : 
+											 {{ s }} 
 
+										</p>		 
+												{% endfor %}
 								
-
+										
+							        {% for p in totalPresent %}
+									<p>The Total present : 
+											 {{ p }} 
+								   </p>
+								{% endfor %}
+								
+									
+								
+							        {% for p in total_absent %}
+										<p>The Total Absent : 
+											 {{ p }} 
+										</p>
+									<div class="hr hr-18 dotted hr-double"></div>
+												{% endfor %}
+									
+								</h5>
+		
 								<div class="row">
 									<div class="col-xs-12">
 										<h3 class="header smaller lighter blue">Attendance Table</h3>
