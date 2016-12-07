@@ -23,6 +23,10 @@ public class StudentModel
     @SerializedName("firstName")
     private String firstName;
 
+    @SerializedName("emailId")
+    private String emailId;
+
+
     public String getLastName()
     {
         return lastName;
@@ -71,6 +75,16 @@ public class StudentModel
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;
+    }
+
+    public String getEmailId()
+    {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId)
+    {
+        this.emailId = emailId;
     }
 
 }

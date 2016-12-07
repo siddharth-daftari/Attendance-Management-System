@@ -6,7 +6,7 @@ urlpatterns = [
     url(r'^login/$', app_view.index),
     url(r'^dashboards$',app_view.dashboard),
     url(r'^form$',app_view.form),
-    url(r'^search$', app_view.search),
+    url(r'^mail$',app_view.mail),
     url(r'^loginform$',app_view.loginform),
     url(r'^admin/', admin.site.urls),
 ]

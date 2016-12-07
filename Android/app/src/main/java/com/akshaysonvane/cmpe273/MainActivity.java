@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,7 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akshaysonvane.cmpe273.adapters.RestAdapterClass;
+import com.akshaysonvane.cmpe273.api.ConnectionApi;
+import com.akshaysonvane.cmpe273.model.ResponseModel;
 import com.akshaysonvane.cmpe273.utils.CircleTransform;
+import com.akshaysonvane.cmpe273.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -33,7 +38,10 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-import static com.akshaysonvane.cmpe273.utils.Utils.PI_MAC;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import static com.akshaysonvane.cmpe273.utils.Utils.ServerUUID;
 
 public class MainActivity extends AppCompatActivity
@@ -50,6 +58,8 @@ public class MainActivity extends AppCompatActivity
 
     private ImageView imgDisplayPic;
 
+    private String PI_MAC;
+
     SharedPreferences cmpe273prefs;
 
     View view;
@@ -61,6 +71,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        setTitle("Synergy");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener()
@@ -90,6 +102,8 @@ public class MainActivity extends AppCompatActivity
         imgDisplayPic = (ImageView) header.findViewById(R.id.imageView);
 
         setNavBarDetails();
+
+        this.PI_MAC = Utils.PI_MAC;
     }
 
     @Override
@@ -125,6 +139,10 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings)
         {
+            getSharedPreferences("cmpe273", Context.MODE_PRIVATE).edit().clear().apply();
+
+            startActivity(new Intent(this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+
             return true;
         }
 
@@ -140,21 +158,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera)
+        if (id == R.id.nav_status)
         {
             fragmentClass = FirstFragment.class;
         }
-        else if (id == R.id.nav_gallery)
+        else if (id == R.id.nav_info)
         {
             fragmentClass = SecondFragment.class;
-        }
-        else if (id == R.id.nav_slideshow)
-        {
-
-        }
-        else if (id == R.id.nav_manage)
-        {
-
         }
         else if (id == R.id.nav_share)
         {
@@ -187,7 +197,8 @@ public class MainActivity extends AppCompatActivity
         this.view = view;
         if (isBluetoothEnabled())
         {
-            new ConnectPi().execute(view);
+            getLeader();
+            //new ConnectPi().execute();
         }
         else
         {
@@ -195,7 +206,8 @@ public class MainActivity extends AppCompatActivity
             {
                 Toast.makeText(getApplicationContext(), R.string.enable_bluetooth, Toast.LENGTH_SHORT).show();
                 mBluetoothAdapter.enable();
-                new ConnectPi().execute(view);
+                getLeader();
+                //new ConnectPi().execute();
             }
         }
 
@@ -254,14 +266,50 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private class ConnectPi extends AsyncTask<View, Void, Boolean>
+    public void getLeader()
+    {
+        ConnectionApi connectionApi = new RestAdapterClass().getApiClassObject();
+
+        connectionApi.getLeader(new Callback<ResponseModel>()
+        {
+            @Override
+            public void success(ResponseModel responseModel, Response response)
+            {
+                if (responseModel != null)
+                {
+                    if (responseModel.getResult().equalsIgnoreCase("true"))
+                    {
+                        PI_MAC = responseModel.getData();
+
+                        new ConnectPi().execute();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplication(), "Server error, falling back to defaults.", Toast.LENGTH_LONG).show();
+                        PI_MAC = Utils.PI_MAC;
+                        new ConnectPi().execute();
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error)
+            {
+                Toast.makeText(getApplication(), "Cannot connect to server, falling back to defaults.", Toast.LENGTH_LONG).show();
+                PI_MAC = Utils.PI_MAC;
+                new ConnectPi().execute();
+            }
+        });
+    }
+
+    private class ConnectPi extends AsyncTask<Void, Void, Boolean>
     {
         @Override
-        protected Boolean doInBackground(View... views)
+        protected Boolean doInBackground(Void... aVoid)
         {
             try
             {
-                Snackbar.make(views[0], "Connecting to PI", Snackbar.LENGTH_SHORT)
+                Snackbar.make(view, "Connecting to PI", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
 
                 BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(PI_MAC);
@@ -276,22 +324,23 @@ public class MainActivity extends AppCompatActivity
 
                 if (bluetoothSocket != null)
                 {
-                    Snackbar.make(views[0], "Connected to PI", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "Connected to PI", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     //Toast.makeText(MainActivity.this, "Connected to PI", Toast.LENGTH_SHORT).show();
                 }
 
                 cmpe273prefs = getSharedPreferences("cmpe273", Context.MODE_PRIVATE);
-                String name = cmpe273prefs.getString("firstName", "John") + cmpe273prefs.getString("lastName", "Doe");
+                String name = cmpe273prefs.getString("firstName", "John") + " " + cmpe273prefs.getString("lastName", "Doe");
                 byte[] bytes = name.getBytes();
 
                 write(bytes);  //sending data to pi
+
                 //Toast.makeText(getApplicationContext(), "Attendance Marked Successfully", Toast.LENGTH_SHORT).show();
-                Snackbar.make(views[0], "Attendance Marked Successfully", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Attendance Marked Successfully", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
             catch (Exception e)
             {
+                Snackbar.make(view, "Connection failed.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 e.printStackTrace();
                 return false;
             }
@@ -304,7 +353,6 @@ public class MainActivity extends AppCompatActivity
         {
             try
             {
-                //Snackbar.make(view, "Connection failed.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 bluetoothSocket.close();
             }
             catch (Exception e)

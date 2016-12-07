@@ -78,7 +78,7 @@ public class SignupActivity extends AppCompatActivity
         _lNameText.setText(intent.getStringExtra("lastName"));
         _emailText.setText(intent.getStringExtra("email"));
         displayPicUrl = intent.getStringExtra("displayPicUrl");
-        Toast.makeText(this, displayPicUrl, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, displayPicUrl, Toast.LENGTH_LONG).show();
 
 
         _signupButton.setOnClickListener(new View.OnClickListener()
@@ -122,6 +122,7 @@ public class SignupActivity extends AppCompatActivity
         studentModel.setStudentId(studentId);
         studentModel.setClassId(inputClass);
         studentModel.setMacAddress(mac);
+        studentModel.setEmailId(emailId);
 
 
         if (checkNetworkConnectivity())
@@ -154,10 +155,11 @@ public class SignupActivity extends AppCompatActivity
         String lName = _lNameText.getText().toString();
         String email = _emailText.getText().toString();
         String studentId = _studentId.getText().toString();
+        String _class = _input_class.getText().toString();
 
         if (fName.isEmpty() || fName.length() < 3)
         {
-            _fNameText.setError("at least 3 characters");
+            _fNameText.setError("Enter at least 3 characters");
             valid = false;
         }
         else
@@ -167,7 +169,7 @@ public class SignupActivity extends AppCompatActivity
 
         if (lName.isEmpty())
         {
-            _lNameText.setError("Enter Valid Name");
+            _lNameText.setError("Enter a valid Name");
             valid = false;
         }
         else
@@ -188,12 +190,22 @@ public class SignupActivity extends AppCompatActivity
 
         if (studentId.isEmpty() || studentId.length() != 9)
         {
-            _studentId.setError("Enter Valid Student ID");
+            _studentId.setError("Enter valid Student ID");
             valid = false;
         }
         else
         {
             _studentId.setError(null);
+        }
+
+        if (_class.isEmpty() || _class.length() != 7)
+        {
+            _input_class.setError("Enter valid class id.");
+            valid = false;
+        }
+        else
+        {
+            _input_class.setError(null);
         }
 
         return valid;
@@ -243,6 +255,7 @@ public class SignupActivity extends AppCompatActivity
                 }
                 else
                 {
+                    onSignupFailed();
                     Toast.makeText(getApplicationContext(), "Connection Error. Try again Later.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -250,6 +263,10 @@ public class SignupActivity extends AppCompatActivity
             @Override
             public void failure(RetrofitError error)
             {
+                onSignupFailed();
+
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Connection Error. Try again Later.", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
         });
