@@ -16,7 +16,7 @@ To create a an automated system that eliminates the manual process of attendance
 
 ## System Architecture Diagram:
 
-![alt tag](https://github.com/siddharth-daftari/testRepo/blob/master/architecture_diagram.png)
+![alt tag](https://github.com/siddharth-daftari/testRepo/blob/master/Architecture_Diagram.png)
 
 ## Features of the System:
 * Attendance Management System using an IOT device
