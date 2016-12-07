@@ -6,7 +6,11 @@ import datetime
 import json
 import logging
 import os
+import requests
 import time
+
+with open(os.path.join(os.getcwd(), "serverConf.json")) as fp:
+    config = json.load(fp)
 
 
 class BTServer(object):
@@ -15,17 +19,36 @@ class BTServer(object):
         self.uuid = uuid
         self.backlog = backlog
         self.logFile = 'BTServer%s.log' % int(time.time())
-        self.sleepSecs = 10
-        self.timeoutSecs = self.sleepSecs - 1
+        self.sleepSecs = config["sleepSecs"]
+        self.timeoutSecs = config["sleepSecs"]
 
         self._setupLogging()
         self._createAndBindSocket()
 
     @property
     def leader(self):
-        # TODO ask server
-        import random
-        return random.random() > 0.5
+        url = config["setLeaderURL"]
+        data = json.dumps({"MAC": config["rpMac"]})
+        try:
+            r = requests.post(url, data=data)
+        except requests.exceptions.ConnectionError:
+            logging.error("Commuincaiton between the server failed")
+            logging.error("URL: %s" % url)
+            logging.error("DATA: %s" % data)
+        else:
+            if r.status_code == 202:
+                logging.debug("I am the leader! Wohoo!!")
+                return True
+            elif r.status_code == 208:
+                logging.debug("I am still the leader! hurray!!")
+                return True
+            elif r.status_code == 401:
+                logging.debug("Damn! Someone else is the leader! :/")
+                return False
+            else:
+                logging.debug("Status_code:%s" % r.status_code)
+                logging.error("Something went wrong while determining leader"
+                              "\nStatus code:%s" % r.status_code)
 
     def _setupLogging(self):
         self.logger = logging.getLogger('BTser')
@@ -72,12 +95,12 @@ class BTServer(object):
 
         while datetime.datetime.now() < endTime:
             if not self.leader:
-                self.logger.info("Damn! Someone else is the leader! :/")
                 self.logger.info("Sleeping for %s sec" % self.sleepSecs)
                 time.sleep(self.sleepSecs)
                 continue
             try:
                 clientsocket, address = self.socket.accept()
+                self.logger.info("-" * 40)
                 self.logger.info("Incoming MAC addr: %s" % address[0])
                 data = clientsocket.recv(1024)
                 self.logger.info("Student Name: %s", data)
@@ -88,7 +111,7 @@ class BTServer(object):
                     logging.warn("Unauthorized MAC addr '%s'" % address[0])
             except bluetooth.btcommon.BluetoothError as e:
                 if e.message == "timed out":
-                    logging.debug("Bluetooth timed out [expected]")
+                    # logging.debug("Bluetooth timed out [expected]")
                     continue
                 self.logger.error("Bluetooth Error: '%s'" % e.message)
             self.logger.info("-" * 40)
@@ -102,7 +125,7 @@ def setupLogging():
     fh.setLevel(logging.DEBUG)
 
     ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
+    ch.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter('%(asctime)s - %(name)5s - '
                                   '%(levelname)7s - %(message)s')
@@ -134,7 +157,7 @@ def getNextClassTime(classesInfo):
 
 def getDummyDataForPresentation():
     x = datetime.datetime.now()
-    x += datetime.timedelta(seconds=1)
+    x += datetime.timedelta(seconds=6)
     x = x.strftime("%m-%d-%y %H:%M:%S")
     y = datetime.datetime.now()
     y += datetime.timedelta(hours=2)
@@ -154,10 +177,9 @@ def getDummyDataForPresentation():
 
 if __name__ == "__main__":
     # TODO shorten the below lines of code or move them to functions
+    global config
     setupLogging()
 
-    with open(os.path.join(os.getcwd(), "serverConf.json")) as fp:
-        config = json.load(fp)
     webServerCon = WebServerConnector(config["classInfoURL"],
                                       config["attendanceMakerURL"])
     while True:
@@ -184,7 +206,7 @@ if __name__ == "__main__":
         if datetime.datetime.now() < nextClassStartTime:
             timeDelta = nextClassStartTime - datetime.datetime.now()
             timeDeltaSecs = timeDelta.total_seconds()
-            logging.error("Sleeping for %s secs" % int(timeDeltaSecs))
+            logging.info("Sleeping for %s secs" % int(timeDeltaSecs))
             time.sleep(int(timeDeltaSecs))
 
         server = BTServer(config["port"], config["uuid"], config["backlog"])

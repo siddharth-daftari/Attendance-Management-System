@@ -66,12 +66,15 @@ class WebServerConnector(object):
             r = requests.post(self.attendanceMakerURL, payload_json)
             self.logger.info("Response status code: %s" % r.status_code)
             assert r.status_code == 200
-            subprocess.call("omxplayer -o local %s" %
+            subprocess.call("omxplayer -o local %s > /dev/null" %
                             os.path.join(os.path.dirname(__file__),
                                          "markAttendance.mp3"),
                             shell=True)
         except AssertionError:
-            self.logger.error("Failed to mark attendace")
+            if r.status_code == 403:
+                self.logger.warn("Attendance already marked for the user")
+            else:
+                self.logger.error("Failed to mark attendace")
         except:
             self.logger.exception("Failed to mark attendace")
         return r.status_code
