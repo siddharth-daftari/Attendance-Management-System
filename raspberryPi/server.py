@@ -15,9 +15,17 @@ class BTServer(object):
         self.uuid = uuid
         self.backlog = backlog
         self.logFile = 'BTServer%s.log' % int(time.time())
+        self.sleepSecs = 10
+        self.timeoutSecs = self.sleepSecs - 1
 
         self._setupLogging()
         self._createAndBindSocket()
+
+    @property
+    def leader(self):
+        # TODO ask server
+        import random
+        return random.random() > 0.5
 
     def _setupLogging(self):
         self.logger = logging.getLogger('BTser')
@@ -42,6 +50,7 @@ class BTServer(object):
 
     def _createAndBindSocket(self):
         self.socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+        self.socket.settimeout(self.timeoutSecs)
         self.socket.bind(("", self.port))
         self.socket.listen(self.backlog)
 
@@ -62,6 +71,11 @@ class BTServer(object):
         self.logger.info("Listening for requests...")
 
         while datetime.datetime.now() < endTime:
+            if not self.leader:
+                self.logger.info("Damn! Someone else is the leader! :/")
+                self.logger.info("Sleeping for %s sec" % self.sleepSecs)
+                time.sleep(self.sleepSecs)
+                continue
             try:
                 clientsocket, address = self.socket.accept()
                 self.logger.info("Incoming MAC addr: %s" % address[0])
@@ -73,6 +87,9 @@ class BTServer(object):
                 else:
                     logging.warn("Unauthorized MAC addr '%s'" % address[0])
             except bluetooth.btcommon.BluetoothError as e:
+                if e.message == "timed out":
+                    logging.debug("Bluetooth timed out [expected]")
+                    continue
                 self.logger.error("Bluetooth Error: '%s'" % e.message)
             self.logger.info("-" * 40)
 
@@ -96,6 +113,45 @@ def setupLogging():
     logger.addHandler(ch)
 
 
+def getNextClassTime(classesInfo):
+    # Get next class assuming non overlapping class timing
+    now = datetime.datetime.now()
+    nextClass, nextClassStartTime, nextClassEndTime = None, None, None
+    for className in classesInfo["data"]:
+        classEndTime = datetime.datetime.strptime(
+            classesInfo["data"][className]['endTime'],
+            "%m-%d-%y %H:%M:%S")
+        classStartTime = datetime.datetime.strptime(
+            classesInfo["data"][className]['startTime'],
+            "%m-%d-%y %H:%M:%S")
+        if classEndTime > now:
+            if nextClass is None or nextClassEndTime > classEndTime:
+                nextClassStartTime = classStartTime
+                nextClassEndTime = classEndTime
+                nextClass = className
+    return nextClass, nextClassStartTime, nextClassEndTime
+
+
+def getDummyDataForPresentation():
+    x = datetime.datetime.now()
+    x += datetime.timedelta(seconds=1)
+    x = x.strftime("%m-%d-%y %H:%M:%S")
+    y = datetime.datetime.now()
+    y += datetime.timedelta(hours=2)
+    y = y.strftime("%m-%d-%y %H:%M:%S")
+    classesInfo = {"message": "Requested class info available in data "
+                              "field",
+                   "data": {"CMPE273": {"endTime": y,
+                                        "enrolledStudents":
+                                        ["00:0a:95:9d:68:00",
+                                         "00:0a:95:9d:68:01",
+                                         "64:BC:0C:F7:84:55",
+                                         "C0:EE:FB:30:09:E8"],
+                                        "startTime": x}},
+                   "result": True}
+    return classesInfo
+
+
 if __name__ == "__main__":
     # TODO shorten the below lines of code or move them to functions
     setupLogging()
@@ -106,48 +162,25 @@ if __name__ == "__main__":
                                       config["attendanceMakerURL"])
     while True:
         # classesInfo = webServerCon.getClassesInfo()
+        # logging.debug(classesInfo)
         # if not classesInfo['result']:
         #     logging.info("No class today... Sleeping for an hour")
         #     time.sleep(60 * 60)
         #     continue
         # TODO remove the below lines used for demo
-        x = datetime.datetime.now()
-        x += datetime.timedelta(seconds=11)
-        x = x.strftime("%m-%d-%y %H:%M:%S")
-        y = datetime.datetime.now()
-        y += datetime.timedelta(hours=2)
-        y = y.strftime("%m-%d-%y %H:%M:%S")
-        classesInfo = {"message": "Requested class info available in data "
-                                  "field",
-                       "data": {"CMPE283": {"endTime": y,
-                                            "enrolledStudents":
-                                            ["00:0a:95:9d:68:00",
-                                             "00:0a:95:9d:68:01",
-                                             "64:BC:0C:F7:84:55"],
-                                            "startTime": x}},
-                       "result": True}
+        classesInfo = getDummyDataForPresentation()
 
-        # Get next class assuming non overlapping class timing
-        now = datetime.datetime.now()
-        nextClass, nextClassStartTime, nextClassEndTime = None, None, None
-        for className in classesInfo["data"]:
-            classEndTime = datetime.datetime.strptime(
-                classesInfo["data"][className]['endTime'],
-                "%m-%d-%y %H:%M:%S")
-            classStartTime = datetime.datetime.strptime(
-                classesInfo["data"][className]['startTime'],
-                "%m-%d-%y %H:%M:%S")
-            if classEndTime > now:
-                if nextClass is None or nextClassEndTime > classEndTime:
-                    nextClassStartTime = classStartTime
-                    nextClassEndTime = classEndTime
-                    nextClass = className
+        nextClass, nextClassStartTime, nextClassEndTime = \
+            getNextClassTime(classesInfo)
+
         if nextClass is None:
             logging.warn("No classes to check attendance for")
             exit()
         else:
-            logging.info("Next/Current class start time: %s" % classStartTime)
-            logging.info("Next/Current class end time: %s" % classEndTime)
+            logging.info("Next/Current class start time: %s" %
+                         nextClassStartTime)
+            logging.info("Next/Current class end time: %s" %
+                         nextClassEndTime)
         if datetime.datetime.now() < nextClassStartTime:
             timeDelta = nextClassStartTime - datetime.datetime.now()
             timeDeltaSecs = timeDelta.total_seconds()
@@ -155,9 +188,9 @@ if __name__ == "__main__":
             time.sleep(int(timeDeltaSecs))
 
         server = BTServer(config["port"], config["uuid"], config["backlog"])
-        server.studentMacAddrList = classesInfo["data"][className][
+        server.studentMacAddrList = classesInfo["data"][nextClass][
             "enrolledStudents"]
         server.serve(nextClassEndTime,
                      lambda stMac: webServerCon.markAttendance(stMac,
                                                                config["rpMac"],
-                                                               className))
+                                                               nextClass))
