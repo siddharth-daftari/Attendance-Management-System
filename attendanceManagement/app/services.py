@@ -1,10 +1,5 @@
 from models import *
-from datetime import datetime,tzinfo
-
-import pytz
-#mytz = pytz.timezone('US/Pacific')
-#currDate = pytz.utc.localize(datetime.utcnow(), is_dst=None).astimezone(mytz)
-
+from datetime import datetime, date
 
 def checkIfAttendanceMarkedService(jsonVar):
     """service to check if student has marked attendance or not"""
@@ -13,10 +8,10 @@ def checkIfAttendanceMarkedService(jsonVar):
         classIdVar = jsonVar['classId']
         attendanceStatusVar = 'Marked'
         returnVar = {}
-
+        print date.today()
         if AttendanceDetails.objects.filter(date__contains=datetime.now().date(),
                                          attendanceStatus=attendanceStatusVar,
-                                         studentMacAddress=studentMacAddressVar,
+                                         studentMacAddress__iexact=studentMacAddressVar,
                                          classId=classIdVar).count() == 0:
 
             returnVar['data'] = False
@@ -46,19 +41,22 @@ def registerStudentService(jsonVar):
         studentIdVar = jsonVar['studentId']
         macAddressVar = jsonVar['macAddress']
         classIdVar = jsonVar['classId']
+        emailIdVar = jsonVar['emailId']
         returnVar = {}
 
-        if (StudentDetails.objects.filter(studentId=studentIdVar).count() == 0) and (StudentClassMapping.objects.filter(studentId=studentIdVar, classId=classIdVar).count() == 0) and (ClassDetails.objects.filter(classId=classIdVar).count() != 0):
-            studentDetailsVar = StudentDetails(firstName=firstNameVar,
+        if (StudentClassMapping.objects.filter(studentId=studentIdVar, classId=classIdVar).count() == 0) and (ClassDetails.objects.filter(classId=classIdVar).count() != 0):
+
+            if (StudentDetails.objects.filter(studentId=studentIdVar).count() == 0):
+                studentDetailsVar = StudentDetails(firstName=firstNameVar,
                                                lastName=lastNameVar,
                                                studentId=studentIdVar,
-                                               macAddress=macAddressVar)
-
-            if StudentClassMapping.objects.filter(studentId=studentIdVar, classId=classIdVar).count() == 0:
-                studentClassMapping = StudentClassMapping(studentId=studentIdVar, classId=classIdVar)
-
+                                               macAddress=macAddressVar,
+                                                   email=emailIdVar)
                 studentDetailsVar.save()
-                studentClassMapping.save()
+
+            #if StudentClassMapping.objects.filter(studentId=studentIdVar, classId=classIdVar).count() == 0:
+            studentClassMapping = StudentClassMapping(studentId=studentIdVar, classId=classIdVar)
+            studentClassMapping.save()
 
 
             returnVar['data'] = ""
@@ -85,13 +83,14 @@ def markAttendanceService(jsonVar):
         raspPieMacAddressVar = jsonVar['raspPieMacAddress']
         attendanceStatusVar = 'Marked'
         classIdVar = jsonVar['classId']
+        print "classIdVar : ", classIdVar
         returnVar = {}
 
-        if AttendanceDetails.objects.filter(date=datetime.now(),
+        if AttendanceDetails.objects.filter(date__contains=datetime.now().date(),
                                             attendanceStatus=attendanceStatusVar,
                                             studentMacAddress=studentMacAddressVar,
                                             classId=classIdVar).count() == 0:
-            attendanceDetails = AttendanceDetails(date=dateVar,
+            attendanceDetails = AttendanceDetails(date=datetime.now(),
                                                   studentMacAddress=studentMacAddressVar,
                                                   raspPieMacAddress=raspPieMacAddressVar,
                                                   attendanceStatus=attendanceStatusVar,
@@ -118,8 +117,8 @@ def getClassDetailsService():
 
         returnVar = {}
 
-
-        classDetails = ClassDetails.objects.filter(classDay=datetime.now().weekday(), classStartTime__gt=datetime.now().time())
+        #classDetails = ClassDetails.objects.filter(classDay=2,classStartTime__gt=datetime.now().time())
+        classDetails = ClassDetails.objects.filter(classDay=datetime.now().weekday(), classEndTime__gt=datetime.now().time())
 
         if len(classDetails) != 0:
             nextClass = classDetails[0]
