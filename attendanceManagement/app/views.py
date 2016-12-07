@@ -21,7 +21,7 @@ def form(request):
             return render(request,'form.html',detail)
         
     ls=["CMPE273"]
-    proffName=["Professor Sithu"]
+    proffName=["Professor Aung"]
     detail={"classId":ls,"proffesorName":proffName}
     return render(request, 'form.html',detail)
 
@@ -38,10 +38,7 @@ def loginform(request):
          return render(request,'index.html')
 
 
-    #recievers list to be fetched from database
-    # email_recievers_list=['siddharthrajesh.daftari@sjsu.edu','seema.rohilla@sjsu.com','madhur.khandelwal@sjsu.edu','akshay.sonvane@sjsu.edu']
-    # send_mail('****Reminder For CMPE 273****', 'Please Turn on your bluetooth as the class starts in 5 mins', settings.EMAIL_HOST_USER,
-    # email_recievers_list, fail_silently=False)
+
 def getAttendance(search_id):
     studentList=StudentDetails.objects.all()
     total_student=studentList.count()
@@ -63,7 +60,7 @@ def getAttendance(search_id):
             totalPresent=totalPresent+1
             resultList.append(rs)
     ls=["CMPE273"]
-    proffName=["Professor Sithu"]
+    proffName=["Professor Aung"]
     totalPresent_list=[totalPresent]
     total_student_list=[total_student]
     total_absent=[total_student-totalPresent]
@@ -73,7 +70,7 @@ def getAttendance(search_id):
 
 def mail(request):
     ls=["CMPE273"]
-    proffName=["Professor Sithu"]
+    proffName=["Professor Aung"]
     if request.method == 'POST':
         subject_content = request.POST.get('subject', None)
         body_content = request.POST.get('mailbody', None)
@@ -82,6 +79,7 @@ def mail(request):
         email_recievers_list=[]
         for student in studentList:
             email_recievers_list.append(student.email)
+        print("email_recievers_list : ", email_recievers_list)
             
         send_mail(subject_content,body_content, settings.EMAIL_HOST_USER,
         email_recievers_list, fail_silently=False)

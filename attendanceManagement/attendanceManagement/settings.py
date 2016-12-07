@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'f1aba23f.ngrok.io',
-    '24a7d3dd.ngrok.io',
+    'de14c93f.ngrok.io',
     '127.0.0.1'
 ]
 
@@ -115,6 +115,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'synergy.cmpe273@gmail.com'
+EMAIL_HOST_PASSWORD = 'pass_WORD1!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
