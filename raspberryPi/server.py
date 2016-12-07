@@ -135,6 +135,15 @@ def setupLogging():
     logger.addHandler(fh)
     logger.addHandler(ch)
 
+    logging.addLevelName(logging.INFO, "\x1b[32m%s\033[1;0m" %
+                         logging.getLevelName(logging.INFO))
+    logging.addLevelName(logging.DEBUG, "\x1b[35m%s\033[1;0m" %
+                         logging.getLevelName(logging.DEBUG))
+    logging.addLevelName(logging.WARNING, "\x1b[33m%s\033[1;0m" %
+                         logging.getLevelName(logging.WARNING))
+    logging.addLevelName(logging.ERROR, "\x1b[31m%s\033[1;0m" %
+                         logging.getLevelName(logging.ERROR))
+
 
 def getNextClassTime(classesInfo):
     # Get next class assuming non overlapping class timing
