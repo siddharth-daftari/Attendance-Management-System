@@ -256,7 +256,7 @@ public class SignupActivity extends AppCompatActivity
                 else
                 {
                     onSignupFailed();
-                    Toast.makeText(getApplicationContext(), "Connection Error. Try again Later.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Server Error. Try again Later.", Toast.LENGTH_SHORT).show();
                 }
             }
 

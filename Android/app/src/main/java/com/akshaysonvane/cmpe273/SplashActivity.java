@@ -1,13 +1,10 @@
 package com.akshaysonvane.cmpe273;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.akshaysonvane.cmpe273.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,7 +17,6 @@ public class SplashActivity extends AppCompatActivity
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     Handler handler;
     Runnable runnable;
-    SharedPreferences cmpe273prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

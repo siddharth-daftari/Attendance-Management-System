@@ -1,5 +1,6 @@
 package com.akshaysonvane.cmpe273;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -266,6 +268,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     public void getLeader()
     {
         ConnectionApi connectionApi = new RestAdapterClass().getApiClassObject();
@@ -345,6 +348,7 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
 
+            //closeProcessDialog();
             return true;
         }
 
