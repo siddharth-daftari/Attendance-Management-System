@@ -18,14 +18,15 @@ To create a an automated system that eliminates the manual process of attendance
 
 ![alt tag](https://github.com/siddharth-daftari/testRepo/blob/master/Architecture_Diagram.png)
 
-## Extra Features of the System:
-* Reminder E-mail service
+## Extra Features implemented:
+* E-Mail system integrated within the application for professor/authorised person
 * Fault tolerant using replication
 * Dynamic leader election
 * Notificaiton via playback of a short tone for each attendance marked
-* Energy effecient mode, Raspberry Pi activates bluetooth scan only during class timing
-* Raspberry Pi denies unauthorized students service, thus avoiding DoS attacks
-* Google OAuth is used in the Android app. No new passwords to remember! 
+* Energy effecient mode, activates bluetooth scan only during class timing
+* Denies unauthorized students service, thus avoiding DoS attacks
+* Auto refresh of class timing periodically
+* Google OAuth used, no new passwords to remember!
 
 
 
