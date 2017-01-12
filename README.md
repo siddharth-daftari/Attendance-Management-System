@@ -31,7 +31,9 @@ To create a an automated system that eliminates the manual process of attendance
 * Protection against SQL injection on server side.
 * Followed MTV (Model Template View) architecture on the server.
 
+## License:
 
+This project is released under the [MIT License](https://github.com/siddharth-daftari/Attendance-Management-System/blob/master/LICENSE.txt).
 
 
   
