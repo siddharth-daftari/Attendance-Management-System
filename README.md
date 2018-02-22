@@ -31,6 +31,18 @@ To create a an automated system that eliminates the manual process of attendance
 * Protection against SQL injection on server side.
 * Followed MTV (Model Template View) architecture on the server.
 
+## Raspberry Pi setup:
+0. Copy the contents of the `raspberryPi` folder to the Raspberry Pi
+1. Run the setup scripts:
+  1. `cd to/the/copied/folder`
+  2. `sudo ./oneTimeSetup.sh`
+  3. `sudo ./bluetoothSetup.sh`
+  4. `sudo ./keyboard.sh` [Optional, if you want to install keyboard]
+2. Edit `./serverConf.json` for your setup
+3. Run:
+    `python ./server.py`
+    
+
 ## License:
 
 This project is released under the [MIT License](https://github.com/siddharth-daftari/Attendance-Management-System/blob/master/LICENSE.txt).
